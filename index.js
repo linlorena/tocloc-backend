@@ -27,6 +27,30 @@ app.get('/users', async (req, res) => {
   return res.status(200).json(data); 
 });
 
+app.get('/users/:id', async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ error: 'O ID do usuário é obrigatório' });
+  }
+
+  const { data, error } = await supabase
+    .from('users') 
+    .select('id, name, email') 
+    .eq('id', id) 
+    .single(); 
+
+  if (error) {
+    return res.status(500).json({ error: error.message });
+  }
+
+  if (!data) {
+    return res.status(404).json({ error: 'Usuário não encontrado' });
+  }
+
+  return res.status(200).json(data);
+});
+
 
 app.post('/users', async (req, res) => {
   const { name, email } = req.body;
@@ -96,6 +120,30 @@ app.get('/sports_place', async (req, res) => {
   }
 
   return res.status(200).json(data); 
+});
+
+app.get('/sports_place/:id', async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ error: 'O ID do local esportivo é obrigatório' });
+  }
+
+  const { data, error } = await supabase
+    .from('sports_place')
+    .select('id, name, location, owner_id')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    return res.status(500).json({ error: error.message });
+  }
+
+  if (!data) {
+    return res.status(404).json({ error: 'Local esportivo não encontrado' });
+  }
+
+  return res.status(200).json(data);
 });
 
 app.post('/sports_place', async (req, res) => {
@@ -173,6 +221,30 @@ app.get('/availability', async (req, res) => {
   return res.status(200).json(data); 
 });
 
+app.get('/availability/:id', async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ error: 'O ID da disponibilidade é obrigatório' });
+  }
+
+  const { data, error } = await supabase
+    .from('availability')
+    .select('id, sports_place_id, available_date, start_time, end_time')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    return res.status(500).json({ error: error.message });
+  }
+
+  if (!data) {
+    return res.status(404).json({ error: 'Disponibilidade não encontrada' });
+  }
+
+  return res.status(200).json(data);
+});
+
 app.post('/availability', async (req, res) => {
   const { sports_place_id, available_date, start_time, end_time } = req.body;
 
@@ -241,6 +313,30 @@ app.get('/reservation', async (req, res) => {
   }
 
   return res.status(200).json(data); 
+});
+
+app.get('/reservation/:id', async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ error: 'O ID da reserva é obrigatório' });
+  }
+
+  const { data, error } = await supabase
+    .from('reservation')
+    .select('id, user_id, sports_place_id, reservation_date, reservation_time')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    return res.status(500).json({ error: error.message });
+  }
+
+  if (!data) {
+    return res.status(404).json({ error: 'Reserva não encontrada' });
+  }
+
+  return res.status(200).json(data);
 });
 
 app.post('/reservation', async (req, res) => {
